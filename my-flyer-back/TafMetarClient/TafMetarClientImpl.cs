@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace my_flyer_back.TafMetarClient
@@ -19,23 +20,28 @@ namespace my_flyer_back.TafMetarClient
             };
         }
 
-        public async Task<String> GetMetars(String icao)
+        public async Task<List<String>> GetMetars(String icao)
         {
             var url = string.Format("/weatherapi/tafmetar/1.0/metar?icao={0}", icao);
-            String result = "";
             var response = await client.GetAsync(url);
+            
             if (response.IsSuccessStatusCode)
             {
                 String stringResponse = await response.Content.ReadAsStringAsync();
 
-                result = stringResponse;//JsonSerializer.Deserialize<List<String>>(stringResponse, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                return SplitStringByLineFeed(stringResponse);//JsonSerializer.Deserialize<List<String>>(stringResponse, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
             }
             else
             {
                 throw new HttpRequestException(response.ReasonPhrase);
             }
 
-            return result;
+        }
+
+        private List<String> SplitStringByLineFeed(string inpString)
+        {
+            List<String> locResult = new List<String>(Regex.Split(inpString, "[\r\n]+"));
+            return locResult;
         }
     }
 }

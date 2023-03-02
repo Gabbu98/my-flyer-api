@@ -7,6 +7,6 @@ namespace my_flyer_back.TafMetarClient
 {
     public interface ITafMetarClient
     {
-        Task<String> GetMetars(String icao);
+        Task<List<String>> GetMetars(String icao);
     }
 }
