@@ -29,5 +29,13 @@ namespace my_flyer_back.Controllers
             return metars;
         }
 
+        [HttpGet("tafs")]
+        public async Task<List<String>> GetTafs()
+        {
+            List<String> tafs = await client.GetTafs("LMML");
+
+            return tafs;
+        }
+
     }
 }
