@@ -59,7 +59,8 @@ namespace my_flyer_back.TafMetarClient
         private List<String> SplitStringByLineFeed(string inpString)
         {
             List<String> locResult = new List<String>(Regex.Split(inpString, "[\r\n]+"));
-            return locResult;
+            
+            return locResult.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
         }
     }
 }

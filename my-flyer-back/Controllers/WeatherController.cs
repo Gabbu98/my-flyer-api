@@ -5,6 +5,8 @@ using my_flyer_back.TafMetarClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace my_flyer_back.Controllers
@@ -36,6 +38,29 @@ namespace my_flyer_back.Controllers
 
             return Ok(tafs);
         }
+        
+        [HttpGet("metar")]
+        public async Task<IActionResult> GetMetar(String icao)
+        {
+            List<String> metars = await client.GetMetars(icao);
 
+            if (!metars.Any())
+            {
+                return Ok("");
+            }
+
+            return Ok(metars.Last());
+        }
+
+        [HttpGet("taf")]
+        public async Task<IActionResult> GetTaf(String icao)
+        {
+            List<String> tafs = await client.GetTafs(icao);
+            if (!tafs.Any())
+            {
+                return Ok("");
+            }
+            return Ok(tafs.Last());
+        }
     }
 }
