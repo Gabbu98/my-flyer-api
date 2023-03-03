@@ -38,6 +38,24 @@ namespace my_flyer_back.TafMetarClient
 
         }
 
+        public async Task<List<String>> GetTafs(String icao)
+        {
+            var url = string.Format("/weatherapi/tafmetar/1.0/taf?icao={0}", icao);
+            var response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                String stringResponse = await response.Content.ReadAsStringAsync();
+
+                return SplitStringByLineFeed(stringResponse);//JsonSerializer.Deserialize<List<String>>(stringResponse, new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            }
+            else
+            {
+                throw new HttpRequestException(response.ReasonPhrase);
+            }
+
+        }
+
         private List<String> SplitStringByLineFeed(string inpString)
         {
             List<String> locResult = new List<String>(Regex.Split(inpString, "[\r\n]+"));

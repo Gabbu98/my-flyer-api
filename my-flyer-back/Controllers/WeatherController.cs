@@ -21,12 +21,20 @@ namespace my_flyer_back.Controllers
         }
 
         [HttpGet("metars")]
-        public async Task<List<String>> GetMetars()
+        public async Task<IActionResult> GetMetars(String icao)
         {
            
-            List<String> metars = await client.GetMetars("LMML");
+            List<String> metars = await client.GetMetars(icao);
 
-            return metars;
+            return Ok(metars);
+        }
+
+        [HttpGet("tafs")]
+        public async Task<IActionResult> GetTafs(String icao)
+        {
+            List<String> tafs = await client.GetTafs(icao);
+
+            return Ok(tafs);
         }
 
     }
